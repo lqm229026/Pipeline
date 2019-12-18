@@ -10,5 +10,16 @@ pipeline {
                 '''
             }
         }
+        stage('Deploy') {
+            steps {
+                retry(3) {
+                    sh './scripts/flakey-deploy.sh'
+                }
+                
+                timeout(time:1, unit: 'MINUTES') {
+                    sh './scripts/health-check.sh'
+                }
+            }
+        }
     }
 }
